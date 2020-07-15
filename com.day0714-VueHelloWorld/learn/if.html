@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HelloWorld</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app-4" v-if="ok">
+    {{message}}
+</div>
+</body>
+<script>
+    window.onload=function(){
+        var app4 = new Vue({
+            el: '#app-4',
+            data: {
+                ok:true,
+                message: "ok为true才显示"
+            }
+        })
+    };
+</script>
+</html>

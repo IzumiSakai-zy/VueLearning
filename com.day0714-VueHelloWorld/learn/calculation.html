@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>calculation</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="opration">
+        第一个操作数：
+        <select v-model="firstOperation">
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+        </select>
+
+        第二个操作数：
+        <select v-model="secondOperation">
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+        </select>
+
+        计算:<span v-text="firstOperation+'+'"></span>
+        <span v-text="secondOperation+'='"></span>
+        <span v-text="add()"></span>
+    </div>
+</body>
+    <script>
+        var operation1=new Vue({
+            el:"#opration",
+            data:{
+                firstOperation: 2,
+                secondOperation: 2
+            },
+            methods: {
+                add: function () {
+                    return parseInt(this.firstOperation)+parseInt(this.secondOperation);
+                }
+            }
+        })
+    </script>
+</html>
