@@ -4,6 +4,10 @@
 
 学习Vue
 
+## vue基础
+
+
+
 ### 前端四要素
 
 * 逻辑
@@ -18,6 +22,8 @@
   * 通信框架——xhr, ajax
 
 ******************
+
+
 
 ### Vue概述
 
@@ -69,6 +75,8 @@
   * view-model——按F12输入代码双向绑定，双向变化
 
 **************
+
+
 
 ### 语法
 
@@ -169,7 +177,11 @@
 
 ******************************
 
+
+
 ## axios
+
+
 
 ### HelloWorld
 
@@ -198,3 +210,383 @@
   ```
 
 * 必须要用{{content}}而不能用v-text
+
+***************
+
+## vue-cli
+
+
+
+### 基础简介
+
+* vue-cli : 相当于maven，就是一个工具
+* node.js:  javascript的运行环境
+
+***************
+
+
+
+### 下载node.js
+
+* 直接下载
+* 下载后改变默认module目录。不要放在C盘
+* 使用淘宝镜像
+* 修改环境变量，移动目录，使cnpm全局可用
+
+
+
+### 创建项目
+
+* 使用模板骨架创建项目 **vue  init  webpack-simpe  helloworld-vue**
+* 进入工程目录下载依赖 **cnpm  install** 。安装完成后会生成一个module文件夹，用于存放下载的依赖
+* 开发模式运行项目  **cnpm  run  dev**  。node.js会提供一个后端运行环境打开8080端口来跑项目
+
+**************
+
+
+
+### 文件结构
+
+* **module**   下载的依赖
+* **src**  写代码的地方
+* **packa.json**  项目的各种配置信息
+* **webpack.config.js**   真正的方配置信息
+* **index.html**  无论多复杂也只有11行源代码
+* **main.js**   是这个项目的入口
+* **App.vue**  实际上就是一个vue对象，也被成为vue组件
+
+> 特点：无论页面多复杂始终查看源代码只有10行，真正的代码都在src下
+
+********************
+
+
+
+### App.vue介绍
+
+* **<template>**  下面必须有一个根节点标签 ，写HTML
+* **script**   写JavaScript
+* **style**  写css
+
+***********
+
+
+
+### vue组件套vue组件
+
+* 在src/components下创建一个 **header.vue**的组件
+
+  > **name** 属性必须对应class, **el**  才对应ID
+
+  ```HTML
+  <template>
+      <div class="header">
+        <h1>{{message}}</h1>
+      </div>
+  </template>
+  
+  <script>
+      export default {
+        name: "header",
+        data() {
+          return {
+            message: "头部信息"
+          }
+        },
+        methods: {
+  
+        }
+      }
+  </script>
+  ```
+
+* 在main.js中全局注册组件，拿来当标签一样使用
+
+  ```javascript
+  import Header from './components/header'
+  
+  //全局注册当标签用
+  Vue.component('MyHeader',Header)
+  ```
+  
+* 在App.vue中当标签使用
+
+  ```HTML
+  <template>
+    <div id="app">
+      <MyHeader></MyHeader>
+      fajgkljsl
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    name: 'app',
+    data () {
+      return {
+        msg: 'Welcome to Your Vue.js App'
+      }
+    }
+  }
+  </script>
+  ```
+  
+* 局部注册
+
+  ```HTML
+  <script>
+    <!--导入-->
+    import Footer from "./components/footer"
+  
+  export default {
+    name: 'app',
+    data () {
+      return {
+        msg: 'Welcome to Your Vue.js App'
+      }
+    },
+     <!--引入components-->
+    components: {
+      "MyFooter":Footer
+    }
+  }
+  </script>
+  ```
+
+*******************
+
+
+
+### 组件参数传递
+
+* 父组件向子组件传递参数
+
+  * 子组件代码如下
+
+    * 在 **pros** 里面定义了一个参数 parameter，并且在HTML中显示这个参数值
+
+    ```HTML
+    <template>
+        <div class="pros">
+          {{parameter}}
+        </div>
+    </template>
+    
+    <script>
+        export default {
+          name: "pros",
+          props: ["parameter"]
+        }
+    </script>
+    ```
+
+  * 父组件代码如下
+
+    * 引入组件 **import Pros from './components/pros'**
+    * 把组件本地注入到这个容器组件   **components**
+    * 定义想要传递的参数数据   **parameterValue: "父亲的参数值"**
+    * 进行双向绑定 **:parameter="parameterValue"**传值
+
+    ```HTML
+    <template>
+      <div id="app">
+        <Pros :parameter="parameterValue"></Pros>
+      </div>
+    </template>
+    
+    <script>
+      import Pros from './components/pros'
+    
+    export default {
+      name: 'app',
+      data () {
+        return {
+          parameterValue: "父亲的参数值"
+        }
+      },
+      components: {
+        "Pros": Pros
+      }
+    }
+    </script>
+    ```
+
+  > 子组件在pros里面定义了可以接受的参数，父组件通过在标签中写明参数的键值来传递参数 
+
+* 子组件向父组件传递参数
+
+  * 把上面的传递的参数变成一个传递一个方法。
+
+  * 子组件接住了父组件的方法，然后子组件调用这个方法相当于父组件调用这个方法
+
+  * 可以把子组件理解成接口
+
+    ```json
+    props: {
+      'btn': {
+        type: Function,
+        required: true,
+        default: function () {}
+      }
+    }
+    ```
+
+* 参数传递简单写法
+
+  * 子组件
+
+    * 子组件对外发射一个信息
+
+    ```HTML
+    <template>
+        <div class="pros">
+          <button @click="doclick">点我</button>
+        </div>
+    </template>
+    
+    <script>
+        export default {
+          name: "pros",
+          methods: {
+            doclick(){
+              this.$emit("key","value")
+            }
+          }
+        }
+    </script>
+    ```
+
+  * 父组件
+
+    * 子组件的标签中使用@符号接收子组件发射的信息
+    * 使用$event的方式获取发射值，并且把值赋给父组件的msg
+
+    ```HTML
+    <template>
+      <div id="app">
+        <Pros @key="msg=$event"></Pros>
+        {{msg}}
+      </div>
+    </template>
+    ```
+
+*****************
+
+
+
+### 使用axios
+
+* 安装 **cnpm install --save axios vue-axios**
+
+* 在main.js中引入
+
+  ```JavaScript
+  import axios from 'axios'
+  import VueAxios from 'vue-axios'
+  
+  Vue.use(VueAxios,axios)
+  ```
+
+* App.vue中使用
+
+  ```HTML
+  <template>
+    <div id="app">
+      <form>
+        用户名:<input type="text" name="username" v-model="username">
+        密码: <input type="password" name="password" v-model="password">
+        <input type="submit" value="提交">
+      </form>
+      <br>
+      <button @click="changejoke">切换笑话</button> {{joketest}}
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    name: 'app',
+    data () {
+      return {
+        msg: 'Welcome to Your Vue.js App',
+        username: 'IzumiSaki',
+        password: '',
+        joketest: ''
+      }
+    },
+    methods: {
+      changejoke: function () {
+          this.axios({
+          	method: 'get',
+          	url: 'https://autumnfish.cn/api/joke'
+              data: {}
+        	}).then(respongse=>{this.joketest=respongse.data})
+      }
+    }
+  }
+  </script>
+  ```
+
+* 页面加载前执行请求
+
+  ```javascript
+  create(){ }
+  ```
+
+*******************************
+
+
+
+### 跨域问题
+
+* 问题简介： 只要端口不同就发生跨域问题
+
+*******************
+
+
+
+### 路由
+
+* 作用：可以实现在一个组件中实现不同组件的相互切换
+
+* 安装路由模块 **cnpm  install  vue-router  -s**
+
+* 在src下新建 **router.js** 文件
+
+  ```JavaScript
+  import product from "./view/product";
+  import home from "./view/home";
+  
+  export const route = [
+    {
+      path: "/home",
+      component: home
+    },{
+      path: "/product",
+      component: product
+    }
+  ]
+  ```
+
+* 在main.js中导入使用路由模块并注册路由表
+
+  ```JavaScript
+  import VueRouter from 'vue-router'  //引入路由模块
+  import {route} from "./router";     //引入创建的静态路由表
+  
+  Vue.use(VueRouter)  //使用路由模块
+  
+  const router = new VueRouter({  //创建VueRouter对象
+    route: route
+  })
+  new Vue({
+    el: '#app',
+    router, //把创建的router实例放在Vue当中
+    render: h => h(App)
+  })
+  ```
+
+* App.vue使用
+
+  ```HTML
+  <router-link to="/homoe">首页</router-link>
+  <router-view></router-view>
+  ```
