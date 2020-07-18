@@ -547,46 +547,112 @@
 
 * 作用：可以实现在一个组件中实现不同组件的相互切换
 
-* 安装路由模块 **cnpm  install  vue-router  -s**
+* 安装路由模块 **cnpm  install  vue-router  -g**
 
 * 在src下新建 **router.js** 文件
 
   ```JavaScript
-  import product from "./view/product";
-  import home from "./view/home";
+  //引入vue
+  import Vue from 'vue';
+  //引入vue-router
+  import VueRouter from 'vue-router';
+  //第三方库需要use一下才能用
+  Vue.use(VueRouter)
+  //引用页面
+  import RouterPage from "./components/RouterPage";
   
-  export const route = [
-    {
-      path: "/home",
-      component: home
-    },{
-      path: "/product",
-      component: product
-    }
+  //定义routes路由的集合，数组类型
+  const routes=[
+      //单个路由均为对象类型，path代表的是路径，component代表组件
+      {path:'/router',component:RouterPage}
   ]
+  
+  //实例化VueRouter并将routes添加进去
+  const router=new VueRouter({
+  //ES6简写，等于routes：routes
+      routes: routes
+  });
+  
+  //抛出这个这个实例对象方便外部读取以及访问
+  export default router
   ```
 
 * 在main.js中导入使用路由模块并注册路由表
 
   ```JavaScript
-  import VueRouter from 'vue-router'  //引入路由模块
-  import {route} from "./router";     //引入创建的静态路由表
+  import Vue from 'vue'
+  import App from './App.vue'
   
-  Vue.use(VueRouter)  //使用路由模块
+  import router from "./router";
+  Vue.config.productionTip = false
   
-  const router = new VueRouter({  //创建VueRouter对象
-    route: route
-  })
   new Vue({
-    el: '#app',
-    router, //把创建的router实例放在Vue当中
-    render: h => h(App)
-  })
+    router,
+    render: h => h(App),
+  }).$mount('#app')
   ```
 
 * App.vue使用
 
   ```HTML
-  <router-link to="/homoe">首页</router-link>
+  <router-link to="/router">router</router-link>
   <router-view></router-view>
   ```
+
+***************
+
+
+
+### 路由传递参数
+
+* 通过路由表设置参数。**/:id**代表参数
+
+  ```javascript
+  const routes={
+      {path:'/router/:id',component:RouterPage}
+  }
+  ```
+
+* App.vue传递参数
+
+  ```HTML
+  <router-link to="/router/3">router</router-link>
+  ```
+
+* router.vue界面接收参数
+
+  ```javascript
+  data(){
+      return {
+          parameter: $route.params.id
+      }
+  }
+  ```
+
+********************
+
+
+
+### 通过js实现路由跳转
+
+```javascript
+btn: function(){
+    this.$router.push("/home/2");
+}
+```
+
+*********************
+
+
+
+### style的scope属性
+
+* 如果不加scope属性则默认作用于全局，因此最好加上scope属性
+
+**************
+
+
+
+### 静态资源打包问题
+
+* 最后发布的打包版本全部打包成一个 **dist.js** 文件
